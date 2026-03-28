@@ -200,7 +200,7 @@ pip install -r requirements.txt
 ### Launch the UI
 
 ```bash
-streamlit run APP PATH
+streamlit run APP_PATH
 ```
 
 Then open `http://localhost:8501`.

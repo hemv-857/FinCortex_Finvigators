@@ -20,7 +20,7 @@ st.set_page_config(
 )
 
 def inject_glass_theme():
-    """Apply a glassmorphism visual system while preserving the existing layout."""
+    
     st.markdown("""
         <style>
         @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap');
