@@ -947,7 +947,7 @@ def screen_1_alert_dashboard(result):
                 height=300,
                 hovermode='x unified',
                 margin=dict(l=80, r=50, t=80, b=140),
-                legend=dict(x=0.5, y=-0.5, xanchor='center', yanchor='top')
+                legend=dict(x=0.5, y=-0.75, xanchor='center', yanchor='top')
             )
             fig.update_yaxes(tickformat='$,.0f')
             st.plotly_chart(style_plotly_figure(fig), use_container_width=True, theme=None)
