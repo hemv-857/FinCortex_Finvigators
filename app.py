@@ -599,7 +599,7 @@ def style_plotly_figure(fig):
             borderwidth=0,
             font=dict(color="#95a8c4", size=11),
             x=0.5,
-            y=-0.22,
+            y=-0.35,
             xanchor="center",
             yanchor="top",
             orientation="h"
@@ -609,7 +609,7 @@ def style_plotly_figure(fig):
             bordercolor="rgba(255, 255, 255, 0.12)",
             font=dict(color="#dbe7f5", size=12)
         ),
-        margin=dict(l=80, r=50, t=60, b=140),
+        margin=dict(l=80, r=50, t=60, b=160),
         showlegend=True,
     )
     fig.update_annotations(font=dict(color="#95a8c4", size=11))
