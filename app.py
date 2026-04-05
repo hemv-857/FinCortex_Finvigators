@@ -9,6 +9,7 @@ import plotly.express as px
 from plotly.subplots import make_subplots
 import inspect
 from orchestrator import CFOOrchestrator
+from skeleton_loader import render_full_skeleton_screen
 
 
 # Page configuration
@@ -2082,6 +2083,12 @@ def main():
     }
     
     if st.sidebar.button("▶ Run Analysis", key="run_button", type="primary"):
+        # Show skeleton loading screen
+        loading_placeholder = st.empty()
+        with loading_placeholder.container():
+            render_full_skeleton_screen()
+        
+        # Run analysis
         orchestrator = build_orchestrator(
             current_cash=current_cash,
             sector=sector,
@@ -2101,6 +2108,9 @@ def main():
         result = orchestrator.run_analysis(days=90)
         st.session_state.result = result
         st.session_state.current_screen = "dashboard"
+        
+        # Clear loading screen
+        loading_placeholder.empty()
     
     # Screen navigation
     if "result" not in st.session_state:
@@ -2126,6 +2136,11 @@ def main():
         "planning_assumptions": previous_result.get("planning_assumptions"),
     }
     if previous_inputs != current_inputs:
+        # Show skeleton loading screen
+        loading_placeholder = st.empty()
+        with loading_placeholder.container():
+            render_full_skeleton_screen()
+        
         orchestrator = build_orchestrator(
             current_cash=current_cash,
             sector=sector,
@@ -2143,6 +2158,9 @@ def main():
             zaggle_export_path=zaggle_export_path,
         )
         st.session_state.result = orchestrator.run_analysis(days=90)
+        
+        # Clear loading screen
+        loading_placeholder.empty()
 
     result = st.session_state.result
     render_app_hero(result)
