@@ -946,8 +946,9 @@ def screen_1_alert_dashboard(result):
                 yaxis_title='Daily Burn ($)',
                 height=300,
                 hovermode='x unified',
-                margin=dict(l=80, r=50, t=80, b=140),
-                legend=dict(x=0.5, y=-0.75, xanchor='center', yanchor='top')
+                margin=dict(l=80, r=50, t=80, b=160),
+                legend=dict(x=0.5, y=-0.75, xanchor='center', yanchor='top'),
+                xaxis=dict(title_standoff=0)
             )
             fig.update_yaxes(tickformat='$,.0f')
             st.plotly_chart(style_plotly_figure(fig), use_container_width=True, theme=None)
