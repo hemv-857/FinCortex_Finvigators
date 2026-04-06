@@ -2,7 +2,7 @@
 Spend Intelligence Agent
 Detects and analyzes spending anomalies.
 """
-from inference import detect_anomalies, detect_anomalies_zscore
+from inference import detect_anomalies, detect_anomalies_zscore, calculate_anomaly_confidence
 
 
 class SpendIntelligenceAgent:
@@ -11,13 +11,14 @@ class SpendIntelligenceAgent:
     def __init__(self, name="SpendIntelligenceAgent"):
         self.name = name
     
-    def analyze(self, features, budget_config):
+    def analyze(self, features, budget_config, current_cash=None):
         """
         Analyze spending patterns and detect anomalies.
         
         Args:
             features: Features dict from feature engineering
             budget_config: Budget configuration
+            current_cash: Current cash balance (optional, for urgency calibration)
             
         Returns:
             Dict with anomaly analysis
@@ -32,11 +33,14 @@ class SpendIntelligenceAgent:
         max_category = max(anomaly_scores, key=anomaly_scores.get)
         max_score = anomaly_scores[max_category]
         
+        # Calculate improved confidence using multiple signals and cash balance
+        confidence = calculate_anomaly_confidence(features, max_category, max_score, current_cash=current_cash)
+        
         # Calculate percent change for this category
         growth_pct = features['category_growth'].get(max_category, 0)
         
         # Determine severity
-        severity = self._classify_severity(max_score, growth_pct)
+        severity = self._classify_severity(confidence, growth_pct)
         budget_consumption = features.get('budget_consumption_rate', {}).get(max_category, 0)
         vendor_concentration = features.get('vendor_concentration', {}).get(max_category, {})
         hhi = vendor_concentration.get('hhi', 0)
@@ -44,7 +48,7 @@ class SpendIntelligenceAgent:
         top_vendor_share = vendor_concentration.get('top_vendor_share', 0)
         
         # Build reason
-        if max_score > 0.7:
+        if confidence > 0.7:
             reason = (
                 f"Detected unusual spending pattern. {max_category.title()} spending increased by "
                 f"{abs(growth_pct):.1f}% in the last 7 days, budget consumption is at {budget_consumption:.0%}, "
@@ -62,7 +66,7 @@ class SpendIntelligenceAgent:
             'percent_change': growth_pct,
             'severity': severity,
             'reason': reason,
-            'confidence': min(1.0, max_score),
+            'confidence': round(confidence, 3),
             'anomaly_scores': anomaly_scores,
             'budget_consumption_rate': features.get('budget_consumption_rate', {}),
             'vendor_concentration': features.get('vendor_concentration', {}),
@@ -72,13 +76,13 @@ class SpendIntelligenceAgent:
             'headline_top_vendor_share': round(top_vendor_share, 4),
         }
     
-    def _classify_severity(self, anomaly_score, percent_change):
-        """Classify severity based on anomaly score and percent change."""
-        if anomaly_score > 0.8 and abs(percent_change) > 25:
+    def _classify_severity(self, confidence_score, percent_change):
+        """Classify severity based on confidence score and percent change."""
+        if confidence_score > 0.8 and abs(percent_change) > 25:
             return 'critical'
-        elif anomaly_score > 0.6 and abs(percent_change) > 20:
+        elif confidence_score > 0.6 and abs(percent_change) > 20:
             return 'high'
-        elif anomaly_score > 0.4 and abs(percent_change) > 15:
+        elif confidence_score > 0.4 and abs(percent_change) > 15:
             return 'medium'
         else:
             return 'low'

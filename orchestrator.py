@@ -119,7 +119,7 @@ class CFOOrchestrator:
         feature_summary = get_feature_summary(features)
         
         # Step 3: Run Spend Agent
-        spend_analysis = self.spend_agent.analyze(features, self.budget_config)
+        spend_analysis = self.spend_agent.analyze(features, self.budget_config, current_cash=self.current_cash)
         
         # Record in memory if anomaly detected
         if spend_analysis['severity'] != 'low':

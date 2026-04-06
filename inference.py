@@ -45,6 +45,111 @@ def detect_anomalies(features, contamination=0.1):
     return anomaly_scores
 
 
+def calculate_anomaly_confidence(features, category, anomaly_score, current_cash=None):
+    """
+    Calculate comprehensive confidence score combining multiple signals.
+    
+    Args:
+        features: Features dict from features.py
+        category: Category name
+        anomaly_score: Base anomaly score from IsolationForest
+        current_cash: Current cash balance (optional, influences urgency)
+        
+    Returns:
+        Confidence score 0-1 with stronger signal weighting
+    """
+    signals = []
+    
+    # Signal 1: Anomaly score (20% weight)
+    signals.append(('anomaly', anomaly_score, 0.20))
+    
+    # Signal 2: Growth rate magnitude (30% weight)
+    growth = abs(features['category_growth'].get(category, 0))
+    # Normalize growth to 0-1: 0% growth = 0, >50% growth = 1
+    growth_signal = min(1.0, growth / 50.0)
+    signals.append(('growth', growth_signal, 0.30))
+    
+    # Signal 3: Budget consumption rate and change (25% weight)
+    budget_consumption = features['budget_consumption_rate'].get(category, 0)
+    # Higher consumption when approaching budget = higher signal
+    if budget_consumption > 0.9:
+        consumption_signal = 1.0
+    elif budget_consumption > 0.7:
+        consumption_signal = 0.8
+    elif budget_consumption > 0.5:
+        consumption_signal = 0.5
+    else:
+        consumption_signal = 0.2
+    signals.append(('consumption', consumption_signal, 0.25))
+    
+    # Signal 4: Vendor concentration stability (15% weight) 
+    vendor_info = features['vendor_concentration'].get(category, {})
+    hhi = vendor_info.get('hhi', 0)
+    # High concentration (>0.4) is concerning, moderate (0.15-0.4) is medium, low (<0.15) is stable
+    if hhi > 0.4:
+        concentration_signal = 1.0
+    elif hhi > 0.25:
+        concentration_signal = 0.7
+    elif hhi > 0.15:
+        concentration_signal = 0.4
+    else:
+        concentration_signal = 0.1
+    signals.append(('concentration', concentration_signal, 0.15))
+    
+    # Signal 5: Spending volatility (10% weight)
+    key = f'rolling_7day_{category}'
+    if key in features:
+        spend_data = features[key]
+        if len(spend_data) >= 5:
+            # Calculate coefficient of variation (std / mean)
+            mean_spend = np.mean(spend_data[-10:]) if len(spend_data) >= 10 else np.mean(spend_data)
+            if mean_spend > 0:
+                std_spend = np.std(spend_data[-10:]) if len(spend_data) >= 10 else np.std(spend_data)
+                cv = std_spend / mean_spend
+                # High volatility (>0.3) = high signal, low volatility (<0.1) = low signal
+                volatility_signal = min(1.0, max(0, cv - 0.05) / 0.35)
+            else:
+                volatility_signal = 0.0
+        else:
+            volatility_signal = 0.0
+    else:
+        volatility_signal = 0.0
+    signals.append(('volatility', volatility_signal, 0.10))
+    
+    # Calculate weighted confidence from spending signals
+    total_weight = sum(w for _, _, w in signals)
+    base_confidence = sum(signal * weight for _, signal, weight in signals) / total_weight if total_weight > 0 else 0
+    
+    # Signal 6: Cash balance urgency multiplier (0-1 range, applied multiplicatively)
+    # Lower cash = higher urgency = higher confidence multiplier
+    if current_cash is not None and current_cash > 0:
+        # Calculate months of runway at current burn rate
+        current_burn = features['burn_rate'][-1] if len(features['burn_rate']) > 0 else 50000
+        if current_burn > 0:
+            months_of_runway = current_cash / (current_burn * 30)
+            
+            # Multiplier: 3+ months = 1.0x, 2 months = 1.3x, 1 month = 1.6x, 0.5 months = 1.9x, <1 week = 2.0x
+            if months_of_runway >= 3:
+                cash_urgency_multiplier = 1.0
+            elif months_of_runway >= 2:
+                cash_urgency_multiplier = 1.3
+            elif months_of_runway >= 1:
+                cash_urgency_multiplier = 1.6
+            elif months_of_runway >= 0.5:
+                cash_urgency_multiplier = 1.9
+            else:
+                cash_urgency_multiplier = 2.0
+        else:
+            cash_urgency_multiplier = 1.0
+    else:
+        cash_urgency_multiplier = 1.0
+    
+    # Apply urgency multiplier and cap at 1.0
+    confidence = base_confidence * cash_urgency_multiplier
+    
+    return max(0, min(1.0, confidence))
+
+
 def detect_anomalies_zscore(features, threshold=2.5):
     """
     Alternative anomaly detection using Z-score.
