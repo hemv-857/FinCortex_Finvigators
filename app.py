@@ -1,6 +1,6 @@
 """
 Streamlit UI for CFO Operating System
-3-screen dashboard for visualization and decision support.
+7-screen dashboard for visualization and decision support.
 """
 import streamlit as st
 import pandas as pd
