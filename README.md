@@ -11,6 +11,10 @@ Website Link : https://finvigators-zagglexcomet26.streamlit.app
 
 Subscription Pricing Model : https://docs.google.com/spreadsheets/d/1fUf2hL04sLCcuBkh9YWXB8wuhGxy6WOfPxoHBJXy3AE/edit?usp=sharing
 
+Feature Explanation : https://docs.google.com/document/d/17ryeeImuRTrx7Mbb1Jeq4fHatHzXlNZRUNuhOeALfDQ/edit?usp=sharing
+
+Formulae Guide : https://docs.google.com/document/d/13iqnZHiNpK90wVeyXGlOUb0JukfqBdSVSM4y3yb-Imk/edit?usp=sharing
+
 ## System Flow
 
 ```text
