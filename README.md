@@ -9,6 +9,8 @@ Demo Link: https://drive.google.com/file/d/1nJL_MafmOhklghvLmw1x45D_GOqk-Hnz/vie
 
 Website Link : https://finvigators-zagglexcomet26.streamlit.app
 
+Subscription Pricing Model : https://docs.google.com/spreadsheets/d/1fUf2hL04sLCcuBkh9YWXB8wuhGxy6WOfPxoHBJXy3AE/edit?usp=sharing
+
 ## System Flow
 
 ```text
