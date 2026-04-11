@@ -15,6 +15,8 @@ Feature Explanation : https://docs.google.com/document/d/17ryeeImuRTrx7Mbb1Jeq4f
 
 Formulae Guide : https://docs.google.com/document/d/13iqnZHiNpK90wVeyXGlOUb0JukfqBdSVSM4y3yb-Imk/edit?usp=sharing
 
+Presentation(11-04-26) link : https://drive.google.com/file/d/1DtbcYVBu7wab-QSAb57ko9fJus5nPMJo/view?usp=drivesdk
+
 ## System Flow
 
 ```text
