@@ -2,7 +2,7 @@
 
 An interactive CFO platform that combines spend intelligence, cashflow forecasting, agentic decisioning, FP&A automation, compliance workflows, and executive narration in a single Streamlit app.
 
-Team Name : Due Diligence
+Team Name : Due Diligence 
 CFO-OS Name : Finvigators
 
 Demo Link: https://drive.google.com/file/d/1nJL_MafmOhklghvLmw1x45D_GOqk-Hnz/view?usp=sharing
