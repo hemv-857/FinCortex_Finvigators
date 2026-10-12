@@ -278,6 +278,10 @@ It also includes scenario metadata such as sector, scale, macro environment, clo
 - [QUICKSTART.md](/Users/hemang/Desktop/BOOKS/code/cfo_os/QUICKSTART.md)
 - [DEPLOYMENT.md](/Users/hemang/Desktop/BOOKS/code/cfo_os/DEPLOYMENT.md)
 
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md).
+
 ## License
 
 [LICENSE](https://github.com/hemv-857/FinCortex_Finvigators/blob/main/LICENSE) — see the file for the full text.
