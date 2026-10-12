@@ -1,5 +1,7 @@
 # AI-Native CFO Operating System
 
+<a href="https://github.com/hemv-857/FinCortex_Finvigators/actions/workflows/ci.yml"><img src="https://github.com/hemv-857/FinCortex_Finvigators/actions/workflows/ci.yml/badge.svg" alt="FinCortex_Finvigators CI"></a> <a href="https://github.com/hemv-857/FinCortex_Finvigators/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License: MIT"></a> <img src="https://img.shields.io/badge/Python-3776AB.svg" alt="Python">
+
 An interactive CFO platform that combines spend intelligence, cashflow forecasting, agentic decisioning, FP&A automation, compliance workflows, and executive narration in a single Streamlit app.
 
 Team Name : Due Diligence 
@@ -275,3 +277,7 @@ It also includes scenario metadata such as sector, scale, macro environment, clo
 - [ARCHITECTURE.md](/Users/hemang/Desktop/BOOKS/code/cfo_os/ARCHITECTURE.md)
 - [QUICKSTART.md](/Users/hemang/Desktop/BOOKS/code/cfo_os/QUICKSTART.md)
 - [DEPLOYMENT.md](/Users/hemang/Desktop/BOOKS/code/cfo_os/DEPLOYMENT.md)
+
+## License
+
+[LICENSE](https://github.com/hemv-857/FinCortex_Finvigators/blob/main/LICENSE) — see the file for the full text.
