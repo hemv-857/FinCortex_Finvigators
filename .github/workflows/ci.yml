@@ -18,8 +18,10 @@ jobs:
           # Pinned so a ruff release cannot silently change which rules fire.
           pip install 'ruff==0.17.0'
           ruff check --select E9,F63,F7,F82 .
+      # test_system.py / test_regressions.py are __main__ smoke scripts, not
+      # pytest modules, and they import the full Streamlit + sklearn stack. A
+      # pytest invocation is not the right shape for them, and installing that
+      # stack per run to satisfy a gate with no assertions is not worth it. So
+      # the honest gate here is: every file compiles.
       - name: Byte-compile (syntax gate)
-        run: |
-          # This repo ships a Streamlit app with no test suite, so the honest
-          # gate is "it imports cleanly" rather than inventing test scope.
-          python -m compileall -q app.py agents __init__.py
+        run: python -m compileall -q .
