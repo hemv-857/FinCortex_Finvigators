@@ -1,0 +1,25 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Lint
+        run: |
+          # Pinned so a ruff release cannot silently change which rules fire.
+          pip install 'ruff==0.17.0'
+          ruff check --select E9,F63,F7,F82 .
+      - name: Byte-compile (syntax gate)
+        run: |
+          # This repo ships a Streamlit app with no test suite, so the honest
+          # gate is "it imports cleanly" rather than inventing test scope.
+          python -m compileall -q app.py agents __init__.py
